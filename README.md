@@ -27,7 +27,7 @@ They walk along your lines, hop between nested blocks, fall through blank lines,
 | 🐹 Guinea Pig | Round, slow and sleepy, adores being petted |
 | 🐭 Mouse | Quick and nervous, scurries off when you reach for it |
 | 🟢 Slime | Squishy and bouncy, loves to hop up |
-| 🐞 Bug | Scuttles around, skitters off when you click it |
+| 🐞 Bug | Scuttles around, skitters off when you click it. Make sure there aren't alot of these in your code! |
 | 🪳 Roach | Very fast, never sleeps, scatters at the slightest touch |
 
 ## Getting started
