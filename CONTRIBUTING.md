@@ -36,3 +36,13 @@ Run `npm test`. The tests check that every frame is 16x16 and that the new pet n
 ## How pets are drawn
 
 VS Code doesn't let extensions draw directly over the editor, so each pet is a text decoration styled as a small absolutely positioned image. All of that lives in `src/vscode/renderer.ts`.
+
+## Releasing
+
+Releases publish to the Visual Studio Marketplace automatically through GitHub Actions (`.github/workflows/publish.yml`).
+
+1. Bump `version` in `package.json` and add an entry at the top of `CHANGELOG.md`.
+2. Commit and push to `main`.
+3. On GitHub, create a release with a tag matching the version, e.g. `v1.0.1`.
+
+The workflow runs the tests, checks the tag matches `package.json`, and publishes. It signs in through a Trusted Publishing policy on the Marketplace publisher page, so no tokens or secrets are stored in the repo.

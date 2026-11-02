@@ -3,8 +3,19 @@
   "displayName": "Petting Zoo: Pixel Pets That Live on Your Code",
   "description": "Tiny pixel pets that live on top of your code. They walk your lines, hop between blocks, fall through blank lines, nap, and love being petted.",
   "version": "1.0.0",
-  "publisher": "petting-zoo",
+  "publisher": "MatthewNguyen",
   "license": "MIT",
+  "author": {
+    "name": "Matthew Nguyen"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mattnguy24/petting-zoo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mattnguy24/petting-zoo/issues"
+  },
+  "homepage": "https://github.com/mattnguy24/petting-zoo#readme",
   "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#2b2d3a",
@@ -116,7 +127,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "npm run compile && node --test out/test/*.test.js",
-    "package": "npm run compile && vsce package --allow-missing-repository"
+    "package": "npm run compile && vsce package"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",

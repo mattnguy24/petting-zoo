@@ -4,9 +4,13 @@ Tiny pixel pets that live **on top of your code**.
 
 *Inspired by [vscode-pets](https://github.com/tonybaloney/vscode-pets). Instead of a separate panel, these pets live right on your code.*
 
+![Pixel pets walking, napping and being petted on top of TypeScript code in the editor](images/demo.gif)
+
 They walk along your lines, hop between nested blocks, fall through blank lines, curl up for naps, and leap back into view when you scroll away. Click one to give it a pat. Choose from fifteen pets drawn in a cute, nostalgic pixel style, and keep as many as you like.
 
 ## Meet the pets
+
+![All fifteen pets](images/pets.png)
 
 | Pet | Personality |
 | --- | --- |
