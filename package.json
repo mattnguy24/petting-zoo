@@ -1,0 +1,127 @@
+{
+  "name": "petting-zoo",
+  "displayName": "Petting Zoo: Pixel Pets That Live on Your Code",
+  "description": "Tiny pixel pets that live on top of your code. They walk your lines, hop between blocks, fall through blank lines, nap, and love being petted.",
+  "version": "1.0.0",
+  "publisher": "petting-zoo",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#2b2d3a",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "pets",
+    "petting zoo",
+    "pixel art",
+    "cat",
+    "dog",
+    "animals",
+    "companion",
+    "fun"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "pettingZoo.spawn",
+        "title": "Add a Pet",
+        "category": "Petting Zoo"
+      },
+      {
+        "command": "pettingZoo.remove",
+        "title": "Remove a Pet",
+        "category": "Petting Zoo"
+      },
+      {
+        "command": "pettingZoo.removeAll",
+        "title": "Remove All Pets",
+        "category": "Petting Zoo"
+      },
+      {
+        "command": "pettingZoo.callHere",
+        "title": "Call Pets to Cursor",
+        "category": "Petting Zoo"
+      },
+      {
+        "command": "pettingZoo.togglePause",
+        "title": "Pause / Resume Pets",
+        "category": "Petting Zoo"
+      }
+    ],
+    "configuration": {
+      "title": "Petting Zoo",
+      "properties": {
+        "pettingZoo.fps": {
+          "type": "number",
+          "default": 15,
+          "minimum": 5,
+          "maximum": 30,
+          "description": "Animation frames per second. Lower uses less CPU."
+        },
+        "pettingZoo.scale": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 6,
+          "description": "Pixel scale for sprites (each sprite is 16x16 pixels). 0 picks a size based on your editor line height."
+        },
+        "pettingZoo.defaultPet": {
+          "type": "string",
+          "enum": [
+            "cat",
+            "graycat",
+            "shiba",
+            "puppy",
+            "golden",
+            "corgi",
+            "bunny",
+            "chicken",
+            "duckling",
+            "mushroom",
+            "guineapig",
+            "mouse",
+            "slime",
+            "bug",
+            "roach"
+          ],
+          "default": "cat",
+          "description": "The pet you start with on first install."
+        },
+        "pettingZoo.reactions": {
+          "type": "boolean",
+          "default": true,
+          "description": "Pets react to you: click a pet to pet it (bugs and the mouse scurry off instead), and pets hop out of the way when your text cursor moves into them."
+        },
+        "pettingZoo.gapWidth": {
+          "type": "number",
+          "default": 5,
+          "minimum": 2,
+          "maximum": 40,
+          "description": "A run of this many blank columns inside a line is a hole: pets can't walk across it and have to jump it (or turn around, or drop through)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test out/test/*.test.js",
+    "package": "npm run compile && vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "1.85.0",
+    "@vscode/vsce": "^4.1.0",
+    "typescript": "^5.9.3"
+  }
+}
