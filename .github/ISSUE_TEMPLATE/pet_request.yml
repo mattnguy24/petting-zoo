@@ -1,0 +1,30 @@
+name: Pet request
+description: Suggest a new pet for the zoo
+labels: [pet request]
+body:
+  - type: input
+    id: pet
+    attributes:
+      label: Which pet?
+      placeholder: Axolotl
+    validations:
+      required: true
+  - type: textarea
+    id: look
+    attributes:
+      label: What should it look like?
+      description: Colours, markings, anything that makes it recognisable at a tiny 16x16 size.
+      placeholder: Pink with frilly gills and a big smile.
+  - type: textarea
+    id: personality
+    attributes:
+      label: How should it behave?
+      description: Fast or slow? Sleepy? Hops or walks? Does it like being petted, or does it scurry off?
+      placeholder: Slow, floaty, loves being petted.
+  - type: checkboxes
+    id: draw
+    attributes:
+      label: Want to draw it yourself?
+      description: Pets are just text grids. See "Adding a pet" in CONTRIBUTING.md.
+      options:
+        - label: I'd like to try making this pet myself

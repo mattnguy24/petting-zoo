@@ -1,0 +1,41 @@
+# Publishes to the Visual Studio Marketplace when you publish a GitHub release.
+#
+# One-time setup: on the Marketplace publisher page
+# (https://marketplace.visualstudio.com/manage), add a Trusted Publishing
+# policy for this repository and this workflow file. No tokens or secrets
+# are needed after that.
+#
+# To ship an update: bump "version" in package.json, add a CHANGELOG entry,
+# push, then create a GitHub release tagged with the same version (e.g. v1.0.1).
+
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write # lets the Marketplace verify this run came from your repo
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Make sure the release tag matches package.json
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$version" ]; then
+            echo "Release tag ($GITHUB_REF_NAME) doesn't match package.json version ($version)."
+            exit 1
+          fi
+      - name: Publish to the Visual Studio Marketplace
+        run: npx vsce publish --oidc
