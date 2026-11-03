@@ -38,13 +38,17 @@ export interface LineSpan {
   end: number;
 }
 
+/** Blank lines kept clear under a selection, so pets and their bubbles don't crowd it. */
+export const SELECTION_MARGIN = 3;
+
 /**
  * Lines a pet must not stand on so it doesn't cover any of `spans`. A pet
- * standing on line y is drawn over the row or two above it (y-1 and part of
- * y-2), so a span from A to B rules out standing on A+1 through B+2.
+ * standing on line y is drawn over the rows above it, so a span from A to B
+ * rules out standing on A+1 through B+SELECTION_MARGIN. Pets above the
+ * selection are drawn upward, away from it, so those lines stay allowed.
  */
 export function coversSpan(line: number, spans: readonly LineSpan[]): boolean {
-  return spans.some((s) => line >= s.start + 1 && line <= s.end + 2);
+  return spans.some((s) => line >= s.start + 1 && line <= s.end + SELECTION_MARGIN);
 }
 
 /** Wrap a world so the given lines are treated as empty air. */

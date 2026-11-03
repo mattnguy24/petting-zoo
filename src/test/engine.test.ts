@@ -333,14 +333,14 @@ test('no pet gets stuck in the air (regression for the endless bottom-leap loop)
   }
 });
 
-test('a selection from line A to B keeps pets off lines A+1 through B+2', () => {
+test('a selection from line A to B keeps pets off lines A+1 through B+3', () => {
   const spans = [{ start: 10, end: 12 }];
   assert.deepEqual(
-    [9, 10, 11, 12, 13, 14, 15].filter((l) => coversSpan(l, spans)),
-    [11, 12, 13, 14],
+    [9, 10, 11, 12, 13, 14, 15, 16].filter((l) => coversSpan(l, spans)),
+    [11, 12, 13, 14, 15],
   );
-  // No selection, just the text cursor on line 5: only the two lines below it are off limits.
-  assert.deepEqual([4, 5, 6, 7, 8].filter((l) => coversSpan(l, [{ start: 5, end: 5 }])), [6, 7]);
+  // No selection, just the text cursor on line 5: the three lines below it are off limits.
+  assert.deepEqual([4, 5, 6, 7, 8, 9].filter((l) => coversSpan(l, [{ start: 5, end: 5 }])), [6, 7, 8]);
 });
 
 test('pets never stand where they would cover the selected lines', () => {

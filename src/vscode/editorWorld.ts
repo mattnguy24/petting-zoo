@@ -8,7 +8,7 @@ export function tabSizeOf(editor: vscode.TextEditor): number {
 }
 
 /** Snapshot of the editor as terrain. Cheap to build; rebuild it every frame. */
-export function buildWorld(editor: vscode.TextEditor): World {
+export function buildWorld(editor: vscode.TextEditor, ignoreCursorAt?: vscode.Position): World {
   const doc = editor.document;
   const ranges = editor.visibleRanges;
   const tabSize = tabSizeOf(editor);
@@ -38,7 +38,10 @@ export function buildWorld(editor: vscode.TextEditor): World {
   // Keep pets off whatever you've selected. With nothing selected, the
   // selection is just the text cursor, so that's the line you're typing on.
   if (!vscode.workspace.getConfiguration('pettingZoo').get<boolean>('avoidSelection', true)) return world;
-  const spans: LineSpan[] = editor.selections.map((s) => ({ start: s.start.line, end: s.end.line }));
+  // A cursor that's only there because you clicked a pet doesn't count.
+  const spans: LineSpan[] = editor.selections
+    .filter((s) => !(ignoreCursorAt && s.isEmpty && s.active.isEqual(ignoreCursorAt)))
+    .map((s) => ({ start: s.start.line, end: s.end.line }));
   return withoutLines(world, (line) => coversSpan(line, spans));
 }
 

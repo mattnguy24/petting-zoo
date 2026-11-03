@@ -36,6 +36,12 @@ export class PetManager implements vscode.Disposable {
   private timer: NodeJS.Timeout | undefined;
   private lastTick = Date.now();
   private paused = false;
+  /**
+   * Where the text cursor landed when you clicked a pet to pet it. Clicking
+   * isn't typing, so that cursor shouldn't chase the pet away. Cleared as soon
+   * as you type, select, or move the cursor anywhere else.
+   */
+  private pettingCursor: vscode.Position | undefined;
   private readonly renderer = new PetRenderer();
   private readonly disposables: vscode.Disposable[] = [];
 
@@ -71,10 +77,11 @@ export class PetManager implements vscode.Disposable {
     const editor = this.pickEditor();
     if (editor !== this.editor) {
       if (this.editor) this.renderer.clear(this.editor);
+      this.pettingCursor = undefined;
       this.editor = editor;
       // Pets follow you to the new editor by dropping in from the top.
       if (editor) {
-        const world = buildWorld(editor);
+        const world = buildWorld(editor, this.pettingCursor);
         this.pets.forEach((p) => p.enterFromTop(world));
       }
     }
@@ -84,7 +91,7 @@ export class PetManager implements vscode.Disposable {
     }
     if (!vscode.window.state.focused) return; // freeze in place, save CPU
 
-    const world = buildWorld(editor);
+    const world = buildWorld(editor, this.pettingCursor);
     for (const pet of this.pets) pet.step(dt, world);
     this.renderer.render(editor, this.pets, this.config().get<number>('scale', 0));
   }
@@ -102,6 +109,7 @@ export class PetManager implements vscode.Disposable {
 
   private onEdit(e: vscode.TextDocumentChangeEvent): void {
     if (!this.editor || e.document !== this.editor.document) return;
+    if (e.contentChanges.length) this.pettingCursor = undefined; // typing: now pets should move
     for (const change of e.contentChanges) {
       const added = (change.text.match(/\n/g)?.length ?? 0) - (change.range.end.line - change.range.start.line);
       if (added !== 0) this.pets.forEach((p) => p.shiftLines(change.range.end.line, added));
@@ -126,7 +134,13 @@ export class PetManager implements vscode.Disposable {
    * text cursor into one makes it hop out of the way.
    */
   private onSelection(e: vscode.TextEditorSelectionChangeEvent): void {
-    if (e.textEditor !== this.editor || !this.reactionsOn()) return;
+    if (e.textEditor !== this.editor) return;
+    // Any cursor move away from where you petted ends the "just petting" grace.
+    if (this.pettingCursor) {
+      const only = e.selections.length === 1 ? e.selections[0] : undefined;
+      if (!only || !only.isEmpty || !only.active.isEqual(this.pettingCursor)) this.pettingCursor = undefined;
+    }
+    if (!this.reactionsOn()) return;
     if (e.kind === vscode.TextEditorSelectionChangeKind.Command) return;
     const sel = e.selections[0];
     const pos = sel.active;
@@ -135,7 +149,10 @@ export class PetManager implements vscode.Disposable {
     if (e.kind === vscode.TextEditorSelectionChangeKind.Mouse) {
       if (!sel.isEmpty) return; // dragging a selection isn't a click
       const clicked = this.pets.find((p) => !p.airborne && this.hits(p, pos.line, col));
-      clicked?.pet(col);
+      if (clicked) {
+        this.pettingCursor = pos;
+        clicked.pet(col);
+      }
       return;
     }
 
@@ -187,7 +204,7 @@ export class PetManager implements vscode.Disposable {
     const editor = this.editor;
     if (!editor) return;
     const pos = editor.selection.active;
-    const world = buildWorld(editor);
+    const world = buildWorld(editor, this.pettingCursor);
     if (world.platforms(pos.line).length === 0) {
       vscode.window.showInformationMessage('Put your cursor on a line with some code for your pets to land on.');
       return;
@@ -205,7 +222,7 @@ export class PetManager implements vscode.Disposable {
 
   private spawn(kind: PetKind, name: string): Pet {
     const pet = new Pet(this.nextId++, kind, name, 4 + Math.random() * 20, 0);
-    if (this.editor) pet.enterFromTop(buildWorld(this.editor));
+    if (this.editor) pet.enterFromTop(buildWorld(this.editor, this.pettingCursor));
     this.pets.push(pet);
     return pet;
   }

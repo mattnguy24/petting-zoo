@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1
+
+- Fix: clicking a pet to pet it made it drop off its line, because the click moved your cursor under it. Pets now stay put while you pet them, and only move out of the way once you start typing or selecting there.
+- Pets keep a little more room under the line you're typing on and your selection: three lines instead of two.
+
 ## 1.1.0
 
 - Pets stay out of your way: they won't stand on the line you're typing on or cover code you've selected, and they hop down if you start typing under one. Turn this off with `pettingZoo.avoidSelection`.
