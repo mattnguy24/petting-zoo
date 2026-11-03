@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { Pet, PET_KINDS, TRAITS } from '../engine/pet';
-import { World, segmentAt } from '../engine/world';
+import { World, coversSpan, segmentAt, withoutLines } from '../engine/world';
 import { anchorFor, segmentsForText } from '../engine/text';
 import { allFrames, SPRITE_H, SPRITE_W } from '../sprites/sprites';
 
@@ -331,4 +331,41 @@ test('no pet gets stuck in the air (regression for the endless bottom-leap loop)
       }
     }
   }
+});
+
+test('a selection from line A to B keeps pets off lines A+1 through B+2', () => {
+  const spans = [{ start: 10, end: 12 }];
+  assert.deepEqual(
+    [9, 10, 11, 12, 13, 14, 15].filter((l) => coversSpan(l, spans)),
+    [11, 12, 13, 14],
+  );
+  // No selection, just the text cursor on line 5: only the two lines below it are off limits.
+  assert.deepEqual([4, 5, 6, 7, 8].filter((l) => coversSpan(l, [{ start: 5, end: 5 }])), [6, 7]);
+});
+
+test('pets never stand where they would cover the selected lines', () => {
+  const lines = Array.from({ length: 30 }, (_, i) => `    statement_number_${i}(withSomeArguments);`);
+  const spans = [{ start: 12, end: 15 }];
+  for (const kind of PET_KINDS) {
+    const world = withoutLines(makeWorld(lines), (l) => coversSpan(l, spans));
+    const pet = new Pet(1, kind, 'T', 10, 0, seeded(71));
+    pet.enterFromTop(world);
+    for (let t = 0; t < 120; t += 1 / 15) {
+      pet.step(1 / 15, world);
+      if (!pet.airborne) assert.ok(!coversSpan(pet.y, spans), `${kind} stood on line ${pet.y}, covering the selection`);
+    }
+  }
+});
+
+test('selecting the lines a pet is covering makes it move out of the way', () => {
+  const lines = Array.from({ length: 30 }, (_, i) => `    statement_number_${i}(withSomeArguments);`);
+  const pet = new Pet(1, 'cat', 'T', 10, 13, seeded(72));
+  pet.state = 'idle'; // standing on line 13, its body drawn over line 12
+  // Now the user starts typing on line 12, right under the cat's body.
+  const spans = [{ start: 12, end: 12 }];
+  const world = withoutLines(makeWorld(lines), (l) => coversSpan(l, spans));
+  pet.step(1 / 15, world);
+  assert.equal(pet.airborne, true, 'should drop off right away');
+  for (let i = 0; i < 60 && pet.airborne; i++) pet.step(1 / 15, world);
+  assert.ok(!coversSpan(pet.y, spans), `landed on line ${pet.y}`);
 });

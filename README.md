@@ -45,6 +45,7 @@ Your pets are remembered between sessions.
 - **Scrolling:** scroll down past your pets and they drop in from the top of the screen. Scroll back up and they leap up from the bottom.
 - **Editing:** pets ride along with their line as you type. Delete the code under one and it falls.
 - **Switching files:** your pets follow you into whichever editor you're using.
+- **Out of your way:** pets stay off the line you're typing on and any code you've selected, so they never cover what you're working on. If you start typing under a pet, it hops down out of the way.
 
 ## Playing with your pets
 
@@ -74,6 +75,7 @@ All commands are in the Command Palette under **Petting Zoo**:
 | Setting | Default | Description |
 | --- | --- | --- |
 | `pettingZoo.reactions` | `true` | Clicking pets them (the bug, roach and mouse scurry off instead), and pets hop away from your text cursor. |
+| `pettingZoo.avoidSelection` | `true` | Pets stay off the line you're typing on and any code you've selected. |
 | `pettingZoo.scale` | `0` | Pet size. `0` sizes pets to fit your editor's line height; `1`–`6` sets the pixel scale. |
 | `pettingZoo.fps` | `15` | Animation frames per second (5–30). Lower uses less CPU. |
 | `pettingZoo.gapWidth` | `5` | How many blank columns in a row count as a gap pets must jump. |

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Platform, World } from '../engine/world';
+import { LineSpan, Platform, World, coversSpan, withoutLines } from '../engine/world';
 import { DEFAULT_GAP_WIDTH, segmentsForText, visualColumns } from '../engine/text';
 
 export function tabSizeOf(editor: vscode.TextEditor): number {
@@ -20,7 +20,7 @@ export function buildWorld(editor: vscode.TextEditor): World {
   // Folded lines are not in any visible range, so they behave like empty air.
   const isShown = (line: number) => ranges.some((r) => line >= r.start.line && line <= r.end.line);
 
-  return {
+  const world: World = {
     firstVisibleLine: first,
     lastVisibleLine: last,
     lineCount: doc.lineCount,
@@ -34,6 +34,12 @@ export function buildWorld(editor: vscode.TextEditor): World {
       return segs;
     },
   };
+
+  // Keep pets off whatever you've selected. With nothing selected, the
+  // selection is just the text cursor, so that's the line you're typing on.
+  if (!vscode.workspace.getConfiguration('pettingZoo').get<boolean>('avoidSelection', true)) return world;
+  const spans: LineSpan[] = editor.selections.map((s) => ({ start: s.start.line, end: s.end.line }));
+  return withoutLines(world, (line) => coversSpan(line, spans));
 }
 
 export function visualColumnAt(editor: vscode.TextEditor, pos: vscode.Position): number {

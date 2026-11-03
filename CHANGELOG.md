@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+
+- Pets stay out of your way: they won't stand on the line you're typing on or cover code you've selected, and they hop down if you start typing under one. Turn this off with `pettingZoo.avoidSelection`.
+
 ## 1.0.1
 
 - Fix: the chicken's and duckling's feet pointed backwards. Their toes now point the way they're walking.

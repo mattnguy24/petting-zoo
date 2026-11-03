@@ -32,6 +32,31 @@ export function platformContains(p: Platform, x: number, margin = 0.25): boolean
   return x >= p.start - margin && x <= p.end + margin;
 }
 
+/** A range of lines, inclusive, e.g. a text selection or the line being edited. */
+export interface LineSpan {
+  start: number;
+  end: number;
+}
+
+/**
+ * Lines a pet must not stand on so it doesn't cover any of `spans`. A pet
+ * standing on line y is drawn over the row or two above it (y-1 and part of
+ * y-2), so a span from A to B rules out standing on A+1 through B+2.
+ */
+export function coversSpan(line: number, spans: readonly LineSpan[]): boolean {
+  return spans.some((s) => line >= s.start + 1 && line <= s.end + 2);
+}
+
+/** Wrap a world so the given lines are treated as empty air. */
+export function withoutLines(world: World, blocked: (line: number) => boolean): World {
+  return {
+    firstVisibleLine: world.firstVisibleLine,
+    lastVisibleLine: world.lastVisibleLine,
+    lineCount: world.lineCount,
+    platforms: (line) => (blocked(line) ? [] : world.platforms(line)),
+  };
+}
+
 /** The segment of `line` under column x, if any. */
 export function segmentAt(world: World, line: number, x: number, margin = 0.25): Platform | null {
   for (const p of world.platforms(line)) if (platformContains(p, x, margin)) return p;
