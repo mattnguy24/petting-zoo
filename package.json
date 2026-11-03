@@ -2,7 +2,7 @@
   "name": "petting-zoo",
   "displayName": "Petting Zoo: Pixel Pets That Live on Your Code",
   "description": "Tiny pixel pets that live on top of your code. They walk your lines, hop between blocks, fall through blank lines, nap, and love being petted.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "MatthewNguyen",
   "license": "MIT",
   "author": {

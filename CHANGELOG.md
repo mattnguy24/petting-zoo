@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Fix: the chicken's and duckling's feet pointed backwards. Their toes now point the way they're walking.
+
 ## 1.0.0
 
 First release.

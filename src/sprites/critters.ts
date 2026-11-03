@@ -285,8 +285,8 @@ const CHICKEN: SpriteSet = {
   frames: makeFrames(
     CHICKEN_BODY,
     {
-      a: ['.....o..o.......', '....oo.oo.......'],
-      b: ['....o....o......', '...oo...oo......'],
+      a: ['.....o..o.......', '.....oo.oo......'],
+      b: ['....o....o......', '....oo...oo.....'],
       fall: ['......o.o.......', BLANK],
     },
     10,
@@ -318,8 +318,8 @@ const DUCKLING: SpriteSet = {
   frames: makeFrames(
     DUCK_BODY,
     {
-      a: ['.....oo..oo.....', '....ooo.ooo.....'],
-      b: ['......oo.oo.....', '.....ooo.ooo....'],
+      a: ['.....oo..oo.....', '.....ooo.ooo....'],
+      b: ['......oo.oo.....', '......ooo.ooo...'],
       fall: ['.....o....o.....', BLANK],
     },
     10,
